@@ -19,7 +19,7 @@ app.add_middleware(
 # --- Load the data ---
 # This code loads the JSON file from the same directory.
 try:
-    df = pd.read_json("api/telemetry.json")
+    df = pd.read_json("api\\q-vercel-latency.json")
 except Exception:
     df = pd.DataFrame() # Create an empty DataFrame if loading fails, to prevent a crash.
 
