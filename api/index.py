@@ -6,27 +6,25 @@ from fastapi.middleware.cors import CORSMiddleware
 # Initialize the FastAPI app
 app = FastAPI()
 
-# --- Enable CORS ---
-# This allows POST requests from any website (as required by the prompt)
+# --- CORRECTED CORS CONFIGURATION ---
+# This middleware adds the necessary CORS headers to every response.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],      # Allows all origins
+    allow_origins=["*"],      # This sets Access-Control-Allow-Origin: *
     allow_credentials=True,
-    allow_methods=["*"],      # Allows all methods, including POST
-    allow_headers=["*"],      # Allows all headers
+    allow_methods=["*"],      # This sets Access-Control-Allow-Methods
+    allow_headers=["*"],      # This sets Access-Control-Allow-Headers
 )
 
 # --- Load the data ---
-# CHANGE: Load data from JSON instead of CSV.
-# This is done once when the serverless function starts, making it efficient.
+# This part is correct.
 try:
-    # Use read_json for the telemetry.json file
     df = pd.read_json("api/q-vercel-latency.json")
 except FileNotFoundError:
-    # If the file is not found, create an empty DataFrame to avoid crashing
     df = pd.DataFrame()
 
 # --- Define the API endpoint ---
+# This part is correct.
 @app.post("/")
 async def get_analytics(request: Request):
     """
@@ -43,17 +41,14 @@ async def get_analytics(request: Request):
     results = {}
 
     for region in regions_to_process:
-        # Filter the DataFrame for the current region
         region_df = df[df['region'] == region]
         
         if not region_df.empty:
-            # Calculate all the required metrics
             avg_latency = region_df['latency_ms'].mean()
             p95_latency = region_df['latency_ms'].quantile(0.95)
             avg_uptime = region_df['uptime_pct'].mean()
             breaches = len(region_df[region_df['latency_ms'] > threshold])
             
-            # Store the results
             results[region] = {
                 "avg_latency": avg_latency,
                 "p95_latency": p95_latency,
