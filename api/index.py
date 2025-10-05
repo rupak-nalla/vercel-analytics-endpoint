@@ -10,10 +10,10 @@ app = FastAPI()
 # This allows POST requests from any website (as required by the prompt)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
-    # allow_credentials=True,
-    # allow_methods=["POST"], # Allows only POST requests
-    # allow_headers=["*"],
+    allow_origins=["*"],      # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],      # Allows all methods, including POST
+    allow_headers=["*"],      # Allows all headers
 )
 
 # --- Load the data ---
