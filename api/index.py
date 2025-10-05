@@ -26,6 +26,11 @@ except Exception:
 # --- Define the API endpoint ---
 @app.post("/")
 async def get_analytics(request: Request):
+    try:
+        df = pd.read_json("api/q-vercel-latency.json")
+    except Exception:
+        df = pd.DataFrame() # Create an empty DataFrame if loading fails, to prevent a crash.
+
     if df.empty:
         return {"error": "Telemetry data not found on server. Check file path and content."}
 
